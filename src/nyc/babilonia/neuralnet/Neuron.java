@@ -19,11 +19,11 @@ public class Neuron
 	int neuronNumber; //neuron number in current level
 	ActivationFunction activate; 
 	ArrayList<Neuron> nextLevel = new ArrayList<Neuron>();
-	public Neuron(int size, double learningRate, int num, ArrayList<Neuron> nl, ActivationFunction function) 
+	public Neuron(int inputSize, double learningRate, int num, ArrayList<Neuron> nl, ActivationFunction function) 
 	{
-		weights = new double[size + 1];
-		input = new double[size + 1];
-		oldDelta = new double[size + 1];
+		weights = new double[inputSize + 1];
+		input = new double[inputSize + 1];
+		oldDelta = new double[inputSize + 1];
 		nextLevel = nl;
 		learningNumber = learningRate;
 		neuronNumber = num;
