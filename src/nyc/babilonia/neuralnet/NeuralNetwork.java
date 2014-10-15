@@ -16,6 +16,7 @@ public class NeuralNetwork implements DigitClassifier
 {
 	ArrayList<ArrayList<Neuron>> network = new ArrayList<ArrayList<Neuron>>();
 	double learningRate;
+	boolean isLinear;
 	ActivationFunction function;
 	/**
 	 * Creates a Neural Network consisting of an input layer, and a hidden layer of size hiddenSize, and 
@@ -97,6 +98,7 @@ public class NeuralNetwork implements DigitClassifier
 		int hiddenLayers = Integer.parseInt(data[1]);
 		int inputs = Integer.parseInt(data[2]);
 		learningRate = Integer.parseInt(data[3]);
+		@SuppressWarnings("rawtypes")
 		Class func = Class.forName(data[3]);
 		function = (ActivationFunction) func.newInstance();
 		int [] sizes = new int [hiddenLayers];
@@ -153,11 +155,52 @@ public class NeuralNetwork implements DigitClassifier
 		pw.flush();
 		pw.close();
 	}
-	@Override
-	public int Classify()
+	//Gets the current answer of the network.
+	private int getAnswer()
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		int max = 0;
+		ArrayList<Neuron> output = network.get(network.size()-1);
+		for(int index = 1; index < output.size() ; ++index)
+		{
+			if(output.get(max).getOutput() < output.get(index).getOutput())
+			{
+				max = index;
+			}
+		}
+		return max;
 	}
-
+	@Override
+	public int Classify(double [] data)
+	{
+		for(Neuron n : network.get(0))
+		{
+			for(int input = 0 ; input < data.length ; ++input)
+			{
+				n.weights[input] = data[input];
+			}
+			n.activate();
+		}
+		for(int layer = 1; layer < network.size() ; ++layer)
+		{
+			for(Neuron n : network.get(layer))
+			{
+				n.activate();
+			}
+		}
+		return getAnswer();
+	}
+	/**
+	 * Updates weights from the top down.
+	 */
+	public void updateWeights()
+	{
+		int answer = getAnswer();
+		for(int layer = network.size()-1 ; layer >=0 ; ++layer)
+		{
+			for(Neuron n : network.get(layer))
+			{
+				n.updateWeights(answer);
+			}
+		}
+	}
 }

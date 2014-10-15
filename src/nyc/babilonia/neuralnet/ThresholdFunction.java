@@ -5,6 +5,10 @@ import nyc.babilonia.Interfaces.ActivationFunction;
 public class ThresholdFunction implements ActivationFunction
 {
 	private double threshold;
+	public ThresholdFunction()
+	{
+		threshold =.5;
+	}
 	public ThresholdFunction(double th)
 	{
 		threshold = th;
@@ -22,6 +26,11 @@ public class ThresholdFunction implements ActivationFunction
 	public double calculateDerivative(double output)
 	{
 		throw new NeuronException("Linear activation function not suitable for cases where derivatives are needed.");
+	}
+	@Override
+	public boolean isLinear()
+	{
+		return true;
 	}
 
 }

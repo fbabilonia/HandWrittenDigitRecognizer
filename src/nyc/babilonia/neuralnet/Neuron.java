@@ -65,7 +65,8 @@ public class Neuron
 		for (int i = 0; i < input.length; ++i)
 			sum += (input[i] * weights[i]);
 		output = activate.calculate(sum);
-		sendResultsToNextLevel();
+		if(nextLevel != null)
+			sendResultsToNextLevel();
 	}// end activate
 
 	/**
@@ -73,7 +74,7 @@ public class Neuron
 	 * Error is computed as derivativeOfActivationFunction * (expectedValue - result).
 	 * @param expected - Expected outcome 
 	 */
-	public void calculateErrorBackPropagation(double expected)
+	private void calculateErrorBackPropagation(double expected)
 	{
 		double derivative = activate.calculateDerivative(output); 
 		if (this.nextLevel == null)
@@ -96,11 +97,22 @@ public class Neuron
 	 * Error is calculated by the expectedValue - result.
 	 * @param expected
 	 */
-	public void calculateErrorLinear(double expected)
+	private void calculateErrorLinear(double expected)
 	{
 		error = expected - output;
 		updateWeights();
 	}//end calculateErrorLinear
+	/**
+	 * Calls correct errorCalculation scheme, and updates weights.
+	 * @param expected - expected outcome.
+	 */
+	public void updateWeights(double expected)
+	{
+		if(activate.isLinear())
+			calculateErrorLinear(expected);
+		else
+			calculateErrorBackPropagation(expected);
+	}
 	/*
 	 * Updates weights by first calculating the delta by learningNumber*input*error.
 	 * The delta is then added to the current weight, plus a fraction of the old delta

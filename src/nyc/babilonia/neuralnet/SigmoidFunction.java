@@ -21,4 +21,10 @@ public class SigmoidFunction implements ActivationFunction
 	{
 		return (output*(1-output));
 	}
+
+	@Override
+	public boolean isLinear()
+	{
+		return false;
+	}
 }
